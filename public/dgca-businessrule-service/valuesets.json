@@ -1,0 +1,11 @@
+[
+  {"id": "country-2-codes", "hash": "country-2-codes.json"},
+  {"id": "covid-19-lab-result", "hash": "test-result.json"},
+  {"id": "covid-19-lab-test-manufacturer-and-name", "hash": "test-manf.json"},
+  {"id": "covid-19-lab-test-type", "hash": "test-type.json"},
+  {"id": "disease-agent-targeted", "hash": "disease-agent-targeted.json"},
+  {"id": "sct-vaccines-covid-19", "hash": "vaccine-prophylaxis.json"},
+  {"id": "vaccines-covid-19-auth-holders", "hash": "vaccine-mah-manf.json"},
+  {"id": "vaccines-covid-19-names", "hash": "vaccine-medicinal-product.json"}
+]
+

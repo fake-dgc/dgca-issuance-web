@@ -89,7 +89,7 @@ export const useGetValueSets = (onInit?: (isInit: boolean) => void, onError?: (m
 
     // on mount load hash list
     React.useEffect(() => {
-        const uri = '/valuesets';
+        const uri = '/valuesets.json';
 
         valueSetApi.get(uri).then((response) => {
             if (response && response.data && response.data.length > 0) {
@@ -162,7 +162,7 @@ export const useGetValueSetHashList = () => {
     const [valueSetList, setValueSetList] = React.useState<IValueSetHashListItem[]>();
 
     React.useEffect(() => {
-        const uri = '/valuesets';
+        const uri = '/valuesets.json';
 
         valueSetApi.get(uri).then((response) => {
             console.log(response.data);

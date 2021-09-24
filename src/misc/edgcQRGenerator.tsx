@@ -37,16 +37,16 @@ export interface CertResult {
     tan: string
 }
 
-enum CertType {
-    Vaccination = 'Vaccination',
-    Recovery = 'Recovery',
-    Test = 'Test'
-}
+// enum CertType {
+//     Vaccination = 'Vaccination',
+//     Recovery = 'Recovery',
+//     Test = 'Test'
+// }
 
 
-interface CertificateInit {
-    greenCertificateType: CertType,
-}
+// interface CertificateInit {
+//     greenCertificateType: CertType,
+// }
 
 interface SigResponse {
     signature: string,
@@ -55,7 +55,7 @@ interface SigResponse {
 
 
 const signerCall = (id: string, hash: string): Promise<SigResponse> => {
-    return api.put('/dgca-issuance-service/dgci/issue/' + id, { hash: hash })
+    return api.get('/dgca-issuance-service/dgci/issue/' + id + '.json')
         .then(res => {
             const sigResponse: SigResponse = res.data;
             return sigResponse;
@@ -83,21 +83,21 @@ const setDgci = (dgcPayload: EUDCC1, dgci: string) => {
     }
 }
 
-const getEdgcType = (edgcPayload: EUDCC1): CertType => {
-    return edgcPayload.r ? CertType.Recovery
-        : edgcPayload.t
-            ? CertType.Test
-            : CertType.Vaccination;
-}
+// const getEdgcType = (edgcPayload: EUDCC1): CertType => {
+//     return edgcPayload.r ? CertType.Recovery
+//         : edgcPayload.t
+//             ? CertType.Test
+//             : CertType.Vaccination;
+// }
 
 
 const generateQRCode = (edgcPayload: EUDCC1): Promise<CertResult> => {
-    const certInit: CertificateInit = {
-        greenCertificateType: getEdgcType(edgcPayload)
-    }
+    // const certInit: CertificateInit = {
+    //     greenCertificateType: getEdgcType(edgcPayload)
+    // }
     let tan: string = '';
 
-    return api.post('/dgca-issuance-service/dgci/issue', certInit)
+    return api.get('/dgca-issuance-service/dgci/issue.json')
         .then(response => {
             const certMetaData: CertificateMetaData = response.data;
             setDgci(edgcPayload, certMetaData.dgci);

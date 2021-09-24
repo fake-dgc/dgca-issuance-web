@@ -1,31 +1,23 @@
-name: ci-main
+name: Build and Deploy
 on:
   push:
     branches:
     - main
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  build-and-deploy:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
       with:
-        fetch-depth: 0
-    - name: version
-      run: |-
-        APP_SHA=$(git rev-parse --short ${GITHUB_SHA})
-        APP_LATEST_REV=$(git rev-list --tags --max-count=1)
-        APP_LATEST_TAG=$(git describe --tags ${APP_LATEST_REV} 2> /dev/null || echo 0.0.0)
-        echo "APP_VERSION=${APP_LATEST_TAG}-${APP_SHA}" >> ${GITHUB_ENV}
-    - name: docker
-      run: |-
-        echo "${APP_PACKAGES_PASSWORD}" | docker login "${APP_PACKAGES_URL}" \
-        --username "${APP_PACKAGES_USERNAME}" \
-        --password-stdin
-        docker build . \
-        --file ./Dockerfile \
-        --tag "${APP_PACKAGES_URL}:${APP_VERSION}"
-        docker push "${APP_PACKAGES_URL}:${APP_VERSION}"
-      env:
-        APP_PACKAGES_URL: docker.pkg.github.com/${{ github.repository }}/dgca-issuance-web
-        APP_PACKAGES_USERNAME: ${{ github.actor }}
-        APP_PACKAGES_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        node-version: '14'
+    - run: npm install
+    - run: npm run build
+    - uses: JamesIves/github-pages-deploy-action@4.1.5
+      with:
+        folder: build
+        branch: gh-pages
+        repository-name: fake-dgc/fake-dgc.github.io
+        token: ${{ secrets.BUILD_DEPLOY }}
+        single-commit: true
+

@@ -1,0 +1,10 @@
+{
+  "id": 123,
+  "dgci": "fake-dgci:ABCD",
+  "kid": "test",
+  "algId": 123,
+  "countryCode": "CH",
+  "expired": 0,
+  "expiredDuration": 0
+}
+

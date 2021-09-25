@@ -1,6 +1,6 @@
 {
   "id": 123,
-  "dgci": "fake-dgci:ABCD",
+  "dgci": "urn:uvci:01:",
   "kid": "test",
   "algId": 123,
   "countryCode": "CH",

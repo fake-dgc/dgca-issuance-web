@@ -22,6 +22,7 @@
 import { createCertificateQRData, CertificateMetaData } from '../misc/edgcProcessor'
 import axios from 'axios';
 import { EUDCC1 } from '../generated-files/dgc-combined-schema';
+import CryptoJS from "crypto-js";
 
 const api = axios.create({
     baseURL: '',
@@ -95,17 +96,21 @@ const generateQRCode = (edgcPayload: EUDCC1): Promise<CertResult> => {
     // const certInit: CertificateInit = {
     //     greenCertificateType: getEdgcType(edgcPayload)
     // }
-    let tan: string = '';
+    let tan: string = CryptoJS.lib.WordArray.random(5).toString(CryptoJS.enc.Hex).toUpperCase();
 
     return api.get('/dgca-issuance-service/dgci/issue.json')
         .then(response => {
             const certMetaData: CertificateMetaData = response.data;
+            // generate random dgci
+            const cert: {co: string} | undefined = edgcPayload.v?.[0] || edgcPayload.t?.[0] || edgcPayload.r?.[0];
+            const padding = CryptoJS.lib.WordArray.random(10).toString(CryptoJS.enc.Hex).toUpperCase();
+            certMetaData.dgci = `${certMetaData.dgci}${cert?.co}:F4K3${padding}`;
             setDgci(edgcPayload, certMetaData.dgci);
             return createCertificateQRData(edgcPayload, certMetaData,
                 (hash) => {
                     return signerCall(response.data.id.toString(), hash)
                         .then((sigResponse) => {
-                            tan = sigResponse.tan;
+                            // tan = sigResponse.tan;
                             return sigResponse.signature;
                         });
                 })
